@@ -12,7 +12,10 @@
     {type}
     {name}
   />
-  <label class="body-large ml-2 flex items-center" for={name}>{label}</label>
+  <label
+    class="body-large ml-2 flex items-center pointer-events-none"
+    for={name}>{label}</label
+  >
 </div>
 
 <style lang="scss">
