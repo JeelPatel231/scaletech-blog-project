@@ -1,9 +1,16 @@
-import { type Actions, fail, redirect } from "@sveltejs/kit";
+import { type Actions, fail, redirect, type ServerLoad } from "@sveltejs/kit";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { jwtSecretKey } from "$lib/JWT";
 import { BaseUserSchema } from "$lib/User";
 import { isZodError } from "$lib/ZodError";
+
+export const load = (async ({ locals }) => {
+  // Throw user to home page when already logged in 
+  if (locals.loggedInUser !== null) {
+    throw redirect(302, '/')
+  }
+}) satisfies ServerLoad
 
 export const actions = {
   default: async ({ cookies, request, locals }) => {

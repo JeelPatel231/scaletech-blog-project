@@ -10,7 +10,7 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			appDatabase: AppDatabase,
-			loggedInUser: OutputUser | undefined,
+			loggedInUser: OutputUser | null,
 		}
 		// interface PageData {}
 		// interface Platform {}

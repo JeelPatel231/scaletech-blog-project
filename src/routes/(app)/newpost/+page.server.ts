@@ -8,7 +8,7 @@ const isError = (e: unknown): e is Error => {
 
 export const actions = {
   default: async ({ request, locals }) => {
-    if (locals.loggedInUser === undefined) {
+    if (locals.loggedInUser === null) {
       throw redirect(302, '/login')
     }
 
