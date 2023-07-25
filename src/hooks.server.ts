@@ -1,9 +1,12 @@
-import { db } from "$lib/sqlite";
+import { AppDataSource } from "$lib/typeORM/Database";
+import { TORMUser } from "$lib/typeORM/User";
 import type { Handle } from "@sveltejs/kit";
 import jwt from "jsonwebtoken"
 
 export const handle = (async ({ event, resolve }) => {
-  event.locals.appDatabase = db
+  if (!AppDataSource.isInitialized) {
+    await AppDataSource.initialize()
+  }
 
   const jwt_cookie = event.cookies.get("jwt")
   if (jwt_cookie) {
@@ -12,7 +15,8 @@ export const handle = (async ({ event, resolve }) => {
       throw `provided token does not decode as JWT`
     }
 
-    event.locals.loggedInUser = event.locals.appDatabase.userDao.getUser(decoded.payload.username)
+    const userData = await TORMUser.findOneBy({ username: decoded.payload.username })
+    event.locals.loggedInUser = userData?.getPOJO() as TORMUser ?? null
   } else {
     event.locals.loggedInUser = null
   }

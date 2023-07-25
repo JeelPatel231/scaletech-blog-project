@@ -8,7 +8,7 @@
   {data.blog.title}
 </div>
 <div class="headline-medium mb-8">
-  - by {data.blog.author_username}
+  - by {data.blog.author.username}
 </div>
 <div class="body-large mb-8">
   {data.blog.description}

@@ -1,10 +1,12 @@
+import { TORMBlog } from "$lib/typeORM/Blog";
 import type { ServerLoad } from "@sveltejs/kit";
 
-export const load = (async ({ locals }) => {
-  const blogs = locals.appDatabase.blogDao.getAllBlogs()
+export const load = (async () => {
+
+  const blogs = await TORMBlog.find({ relations: { author: true } })
 
   return {
-    blogs: blogs,
+    blogs: blogs
   }
 
 }) satisfies ServerLoad

@@ -1,6 +1,7 @@
-import { BlogValidationSchema } from "$lib/Blog";
 import { isZodError } from "$lib/ZodError";
-import { type Actions, fail, redirect, error } from "@sveltejs/kit";
+import { TORMBlog } from "$lib/typeORM/Blog";
+import { BlogValidationSchema } from "$lib/zodValidations/Blog";
+import { type Actions, fail, redirect } from "@sveltejs/kit";
 
 const isError = (e: unknown): e is Error => {
   return (e as Error).message !== undefined
@@ -14,21 +15,29 @@ export const actions = {
 
     const formData = await request.formData()
     const data = Object.fromEntries([...formData]);
-    data.author_username = locals.loggedInUser.username
-    let inserted_blog_id: string | null = null;
+    const dbBlogEntry = new TORMBlog();
+
     try {
       const parsedData = BlogValidationSchema.parse(data)
-      inserted_blog_id = locals.appDatabase.blogDao.insertBlog(parsedData)
+      dbBlogEntry.setAttributes({
+        ...parsedData,
+        author: locals.loggedInUser,
+        tags: []
+      })
+      dbBlogEntry.save()
 
     } catch (e: any) {
+      console.log(e)
       if (isZodError(e)) {
         return fail(400, e.formErrors)
       }
-      else if (isError(e) && e.message.startsWith("UNIQUE constraint failed")) {
-        return fail(400, { fieldErrors: { username: "Account already exists!" } })
+      if (isError(e)) {
+        return fail(400, { message: e.message })
       }
     }
-    if (inserted_blog_id === null) return
-    throw redirect(302, `/blog/${inserted_blog_id}`)
+    if (dbBlogEntry.id === null)
+      return fail(400, { fieldErrors: { title: "Something went wrong!" } })
+
+    throw redirect(302, `/blog/${dbBlogEntry.id}`)
   },
 } satisfies Actions;

@@ -1,72 +1,94 @@
-import { expect, test } from "vitest";
+import { afterAll, beforeEach, expect, test } from "vitest";
 
-import { BlogValidationSchema } from "$lib/Blog";
-import Database from "better-sqlite3";
-import { AppDatabase } from "$lib/sqlite";
-import { UserValidationSchema } from "$lib/User";
+import "reflect-metadata"
+import { ArrayContains, DataSource, Like } from "typeorm";
+import { TORMUser } from "$lib/typeORM/User";
+import { BaseDataSourceConfig } from "$lib/typeORM/BaseConfig";
+import { TORMBlog } from "$lib/typeORM/Blog";
 
-const appDb = new AppDatabase(new Database(":memory:"))
+let dbConn: DataSource;
 
-const baseUserObject = {
-  account_created: new Date().getTime(),
-  username: "jeelpatel231",
-  avatar: "https://picsum.photos/200",
+beforeEach(async () => {
+  dbConn = new DataSource({
+    type: "postgres",
+    host: "localhost",
+    username: "postgres",
+    password: "password",
+    database: "postgres",
+    dropSchema: true,
+    ...BaseDataSourceConfig,
+    logging: false,
+  })
+  await dbConn.initialize()
+});
+
+afterAll(() => {
+  dbConn.destroy()
+})
+
+const user1 = new TORMUser()
+user1.setAttributes({
+  avatar: null,
+  username: "Jeel",
   first_name: "Jeel",
   last_name: "Patel",
-  password: "nicepass",
-}
-
-const userObject = UserValidationSchema.parse({
-  ...baseUserObject,
-  passwordConfirm: "nicepass",
+  password: "DBTESTING"
 })
 
-const { password, ...noPassUser } = baseUserObject
-
-const userBlogObject = {
-  author_username: "jeelpatel231",
-  description: "Description",
-  content: "Hello World",
-  title: "Making a Blog App",
-}
-
-const blogObject = BlogValidationSchema.parse(userBlogObject)
-
-test("get user with no data", () => {
-  expect(appDb.userDao.getUser(userObject.username)).toBe(undefined)
+const blog1 = new TORMBlog()
+blog1.setAttributes({
+  author: user1,
+  title: "Nice Blog Title",
+  content: "Nice Blog Markdown COntent",
+  description: "Little description",
+  tags: ["tag1", "tag2"]
 })
 
-test.fails("Fail insertion of tags with no blog", () => {
-  appDb.tagDao.addTag({ tag: "nice", blog_id: blogObject.id })
+test("test User Insertion", async () => {
+  await user1.save()
+  const ret = await TORMUser.findOneBy({ username: user1.username })
+  expect(ret).toStrictEqual(user1)
 })
 
-test.fails("Fail insertion of blog with no author", () => {
-  appDb.blogDao.insertBlog(blogObject)
+test("Test Ephemerial Data", async () => {
+  const ret = await TORMUser.count()
+  expect(ret).toBe(0)
 })
 
-test("check insertion of user", () => {
-  appDb.userDao.insertUser(userObject)
-  expect(appDb.userDao.getFullUser(userObject.username)).toStrictEqual(baseUserObject)
-  expect(appDb.userDao.getUser(userObject.username)).toStrictEqual(noPassUser)
+test("Get user that doesnt exist", async () => {
+  const resp = await TORMUser.findOneBy({ username: "doesntExist" })
+  expect(resp).toBe(null)
+})
+
+test.fails("Fail insertion of blog with no author", async () => {
+  await blog1.save()
+})
+
+test("check insertion of blog", async () => {
+  await user1.save()
+  await blog1.save()
+})
+
+test("search blogs", async () => {
+  await user1.save()
+  await blog1.save()
+
+  const blogResp = await TORMBlog.find({
+    where: {
+      title: Like("%Title%")
+    },
+    relations: {
+      author: true,
+    }
+  })
+  expect(blogResp.pop()).toStrictEqual(blog1)
 })
 
 
-test.fails("check insertion of user AGAIN", () => {
-  appDb.userDao.insertUser(userObject)
-})
+test("fetch blogs from tags", async () => {
+  await user1.save()
+  await blog1.save()
 
-test("check insertion of blog", () => {
-  appDb.blogDao.insertBlog(blogObject)
-  expect(appDb.blogDao.getBlogData(blogObject.id)).toStrictEqual(blogObject)
-})
-
-test("check insertion of tags", () => {
-  appDb.tagDao.addTag({ tag: "nice", blog_id: blogObject.id })
-  appDb.tagDao.addTag({ tag: "nice1", blog_id: blogObject.id })
-  expect(appDb.tagDao.getAllTags().length).toBe(2)
-  expect(appDb.tagDao.getBlogTags(blogObject.id).length).toBe(2)
-})
-
-test("search blogs", () => {
-  expect(appDb.blogDao.searchBlogs("making").pop()).toStrictEqual(blogObject)
+  const resp = await TORMBlog.find({ where: { tags: ArrayContains(["tag1"]) }, relations: { author: true } })
+  expect(resp.pop()).toStrictEqual(blog1)
 })

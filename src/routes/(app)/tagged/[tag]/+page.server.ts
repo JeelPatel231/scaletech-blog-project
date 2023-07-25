@@ -1,12 +1,15 @@
+import { TORMBlog } from "$lib/typeORM/Blog";
 import { error, type ServerLoad } from "@sveltejs/kit";
-export const load = (async ({ locals, params }) => {
+import { instanceToPlain } from "class-transformer";
+import { ArrayContains } from "typeorm";
+export const load = (async ({ params }) => {
   if (!params.tag)
     throw error(404)
 
-  const blogs = locals.appDatabase.blogDao.getBlogByTags(params.tag)
+  const blogs = await TORMBlog.find({ where: { tags: ArrayContains([params.tag]) } })
 
   return {
-    blogs: blogs
+    blogs: instanceToPlain(blogs)
   }
 
 }) satisfies ServerLoad

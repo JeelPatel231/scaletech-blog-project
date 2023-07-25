@@ -2,8 +2,9 @@ import { type Actions, fail, redirect, type ServerLoad } from "@sveltejs/kit";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { jwtSecretKey } from "$lib/JWT";
-import { BaseUserSchema } from "$lib/User";
+import { BaseUserSchema } from "$lib/zodValidations/User";
 import { isZodError } from "$lib/ZodError";
+import { TORMUser } from "$lib/typeORM/User";
 
 export const load = (async ({ locals }) => {
   // Throw user to home page when already logged in 
@@ -27,9 +28,9 @@ export const actions = {
 
     if (validLogin === undefined) return fail(400)
 
-    const userFromDB = locals.appDatabase.userDao.getFullUser(validLogin.username)
+    const userFromDB = await TORMUser.findOneBy({ username: validLogin.username })
 
-    if (userFromDB === undefined)
+    if (userFromDB === null)
       return fail(400, { username: "User doesn't exist." })
 
     if (!await bcrypt.compare(validLogin.password, userFromDB.password))

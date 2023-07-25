@@ -5,6 +5,7 @@ import remarkGfm from 'remark-gfm'
 import breaks from "remark-breaks"
 import remarkImages from "remark-images"
 import extendedTable from "remark-extended-table"
+import { TORMBlog } from "$lib/typeORM/Blog";
 
 const remarkProcessor = remark()
   .use(html)
@@ -13,18 +14,18 @@ const remarkProcessor = remark()
   .use(remarkImages)
   .use(extendedTable)
 
-export const load = (async ({ locals, params }) => {
+export const load = (async ({ params }) => {
   if (!params.id)
     throw error(404)
 
-  const blog = locals.appDatabase.blogDao.getBlogData(params.id)
+  const blog = await TORMBlog.findOne({ where: { id: params.id }, relations: { author: true } })
 
-  if (blog === undefined) throw error(404)
+  if (blog === null) throw error(404)
 
   const processedContent = await remarkProcessor.process(blog.content);
 
   return {
-    blog: blog,
+    blog: blog.getPOJO(),
     htmlRender: processedContent.toString(),
   }
 

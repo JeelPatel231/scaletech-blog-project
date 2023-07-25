@@ -1,5 +1,6 @@
-import { UserValidationSchema } from "$lib/User";
 import { isZodError } from "$lib/ZodError";
+import { TORMUser } from "$lib/typeORM/User";
+import { UserValidationSchema } from "$lib/zodValidations/User";
 import { type Actions, fail, redirect } from "@sveltejs/kit";
 import bcrypt from "bcrypt";
 
@@ -27,25 +28,19 @@ export const actions = {
       //
       // console.log(buffer)
 
-      const userObject = {
+      const userObject = new TORMUser()
+      userObject.setAttributes({
+        ...parsedData,
         password: await bcrypt.hash(parsedData.password, salt),
-        username: parsedData.username,
-        avatar: parsedData.avatar,
-        last_name: parsedData.last_name,
-        first_name: parsedData.first_name,
-        account_created: parsedData.account_created,
-      }
+      })
 
-      locals.appDatabase.userDao.insertUser(userObject)
-
+      await userObject.save()
     } catch (e: any) {
       console.log(e)
       if (isZodError(e)) {
         return fail(400, e.formErrors.fieldErrors)
       }
-      else if (isError(e) && e.message.startsWith("UNIQUE constraint failed")) {
-        return fail(400, { username: "Account already exists!" })
-      }
+      throw e
     }
 
     throw redirect(302, '/login')
