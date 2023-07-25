@@ -1,5 +1,5 @@
 import { AppDataSource } from "$lib/typeORM/Database";
-import { TORMUser } from "$lib/typeORM/User";
+import { User } from "$lib/typeORM/User";
 import type { Handle } from "@sveltejs/kit";
 import jwt from "jsonwebtoken"
 
@@ -15,8 +15,8 @@ export const handle = (async ({ event, resolve }) => {
       throw `provided token does not decode as JWT`
     }
 
-    const userData = await TORMUser.findOneBy({ username: decoded.payload.username })
-    event.locals.loggedInUser = userData?.getPOJO() as TORMUser ?? null
+    const userData = await User.findOneBy({ username: decoded.payload.username })
+    event.locals.loggedInUser = userData?.getPOJO() as User ?? null
   } else {
     event.locals.loggedInUser = null
   }

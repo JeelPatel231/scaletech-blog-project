@@ -1,5 +1,5 @@
 import { isZodError } from "$lib/ZodError";
-import { TORMBlog } from "$lib/typeORM/Blog";
+import { Blog } from "$lib/typeORM/Blog";
 import { BlogValidationSchema } from "$lib/zodValidations/Blog";
 import { type Actions, fail, redirect } from "@sveltejs/kit";
 
@@ -15,7 +15,7 @@ export const actions = {
 
     const formData = await request.formData()
     const data = Object.fromEntries([...formData]);
-    const dbBlogEntry = new TORMBlog();
+    const dbBlogEntry = new Blog();
 
     try {
       const parsedData = BlogValidationSchema.parse(data)

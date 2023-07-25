@@ -5,7 +5,7 @@ import remarkGfm from 'remark-gfm'
 import breaks from "remark-breaks"
 import remarkImages from "remark-images"
 import extendedTable from "remark-extended-table"
-import { TORMBlog } from "$lib/typeORM/Blog";
+import { Blog } from "$lib/typeORM/Blog";
 
 const remarkProcessor = remark()
   .use(html)
@@ -18,7 +18,7 @@ export const load = (async ({ params }) => {
   if (!params.id)
     throw error(404)
 
-  const blog = await TORMBlog.findOne({ where: { id: params.id }, relations: { author: true } })
+  const blog = await Blog.findOne({ where: { id: params.id }, relations: { author: true } })
 
   if (blog === null) throw error(404)
 

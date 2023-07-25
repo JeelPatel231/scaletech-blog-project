@@ -1,10 +1,10 @@
-import { TORMBlog } from "./Blog"
-import { TORMUser } from "./User"
+import { Blog } from "./Blog"
+import { User } from "./User"
 
 export const BaseDataSourceConfig = {
   synchronize: true,
   logging: true,
-  entities: [TORMUser, TORMBlog],
+  entities: [User, Blog],
   subscribers: [],
   migrations: [],
 }

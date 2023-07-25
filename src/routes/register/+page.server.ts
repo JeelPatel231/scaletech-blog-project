@@ -1,5 +1,5 @@
 import { isZodError } from "$lib/ZodError";
-import { TORMUser } from "$lib/typeORM/User";
+import { User } from "$lib/typeORM/User";
 import { UserValidationSchema } from "$lib/zodValidations/User";
 import { type Actions, fail, redirect } from "@sveltejs/kit";
 import bcrypt from "bcrypt";
@@ -28,7 +28,7 @@ export const actions = {
       //
       // console.log(buffer)
 
-      const userObject = new TORMUser()
+      const userObject = new User()
       userObject.setAttributes({
         ...parsedData,
         password: await bcrypt.hash(parsedData.password, salt),

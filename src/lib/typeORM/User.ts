@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryColumn } from "typeorm";
 import { ConstructorBaseEntity } from "./TypeORMUtils";
 
 @Entity()
-export class TORMUser extends ConstructorBaseEntity {
+export class User extends ConstructorBaseEntity {
   @PrimaryColumn('text')
   username!: string;
 

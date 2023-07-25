@@ -1,15 +1,15 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ConstructorBaseEntity } from "./TypeORMUtils";
-import { TORMUser } from "./User";
+import { User } from "./User";
 
 @Entity()
-export class TORMBlog extends ConstructorBaseEntity {
+export class Blog extends ConstructorBaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @OneToOne(() => TORMUser)
+  @OneToOne(() => User)
   @JoinColumn()
-  author!: TORMUser;
+  author!: User;
 
   @Column('text', { array: true })
   tags!: string[]

@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import { jwtSecretKey } from "$lib/JWT";
 import { BaseUserSchema } from "$lib/zodValidations/User";
 import { isZodError } from "$lib/ZodError";
-import { TORMUser } from "$lib/typeORM/User";
+import { User } from "$lib/typeORM/User";
 
 export const load = (async ({ locals }) => {
   // Throw user to home page when already logged in 
@@ -28,7 +28,7 @@ export const actions = {
 
     if (validLogin === undefined) return fail(400)
 
-    const userFromDB = await TORMUser.findOneBy({ username: validLogin.username })
+    const userFromDB = await User.findOneBy({ username: validLogin.username })
 
     if (userFromDB === null)
       return fail(400, { username: "User doesn't exist." })

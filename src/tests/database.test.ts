@@ -2,9 +2,9 @@ import { afterAll, beforeEach, expect, test } from "vitest";
 
 import "reflect-metadata"
 import { ArrayContains, DataSource, Like } from "typeorm";
-import { TORMUser } from "$lib/typeORM/User";
+import { User } from "$lib/typeORM/User";
 import { BaseDataSourceConfig } from "$lib/typeORM/BaseConfig";
-import { TORMBlog } from "$lib/typeORM/Blog";
+import { Blog } from "$lib/typeORM/Blog";
 
 let dbConn: DataSource;
 
@@ -26,7 +26,7 @@ afterAll(() => {
   dbConn.destroy()
 })
 
-const user1 = new TORMUser()
+const user1 = new User()
 user1.setAttributes({
   avatar: null,
   username: "Jeel",
@@ -35,7 +35,7 @@ user1.setAttributes({
   password: "DBTESTING"
 })
 
-const blog1 = new TORMBlog()
+const blog1 = new Blog()
 blog1.setAttributes({
   author: user1,
   title: "Nice Blog Title",
@@ -46,17 +46,17 @@ blog1.setAttributes({
 
 test("test User Insertion", async () => {
   await user1.save()
-  const ret = await TORMUser.findOneBy({ username: user1.username })
+  const ret = await User.findOneBy({ username: user1.username })
   expect(ret).toStrictEqual(user1)
 })
 
 test("Test Ephemerial Data", async () => {
-  const ret = await TORMUser.count()
+  const ret = await User.count()
   expect(ret).toBe(0)
 })
 
 test("Get user that doesnt exist", async () => {
-  const resp = await TORMUser.findOneBy({ username: "doesntExist" })
+  const resp = await User.findOneBy({ username: "doesntExist" })
   expect(resp).toBe(null)
 })
 
@@ -73,7 +73,7 @@ test("search blogs", async () => {
   await user1.save()
   await blog1.save()
 
-  const blogResp = await TORMBlog.find({
+  const blogResp = await Blog.find({
     where: {
       title: Like("%Title%")
     },
@@ -89,6 +89,6 @@ test("fetch blogs from tags", async () => {
   await user1.save()
   await blog1.save()
 
-  const resp = await TORMBlog.find({ where: { tags: ArrayContains(["tag1"]) }, relations: { author: true } })
+  const resp = await Blog.find({ where: { tags: ArrayContains(["tag1"]) }, relations: { author: true } })
   expect(resp.pop()).toStrictEqual(blog1)
 })
