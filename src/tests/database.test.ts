@@ -28,7 +28,7 @@ afterAll(() => {
 
 const user1 = new User()
 user1.setAttributes({
-  avatar: null,
+  avatar: false,
   username: "Jeel",
   first_name: "Jeel",
   last_name: "Patel",

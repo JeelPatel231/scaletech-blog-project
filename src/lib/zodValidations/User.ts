@@ -10,7 +10,6 @@ export const BaseUserSchema = z.object({
 })
 
 const UserSchema = BaseUserSchema.extend({
-  avatar: z.string().nullable().default(null),
   last_name: z.string().max(20),
   first_name: z.string().max(20),
 })
