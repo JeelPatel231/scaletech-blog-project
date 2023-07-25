@@ -1,7 +1,7 @@
 import { afterAll, beforeEach, expect, test } from "vitest";
 
 import "reflect-metadata"
-import { ArrayContains, DataSource, Like } from "typeorm";
+import { ArrayContains, DataSource, Equal, Like } from "typeorm";
 import { User } from "$lib/typeORM/User";
 import { BaseDataSourceConfig } from "$lib/typeORM/BaseConfig";
 import { Blog } from "$lib/typeORM/Blog";
@@ -67,6 +67,10 @@ test.fails("Fail insertion of blog with no author", async () => {
 test("check insertion of blog", async () => {
   await user1.save()
   await blog1.save()
+
+  const resp = await Blog.find({ where: { author: { username: Equal("Jeel") } } })
+  const resp2 = await User.findOne({ where: { username: Equal("Jeel") }, relations: { blogs: true } })
+  expect(resp).toStrictEqual(resp2?.blogs)
 })
 
 test("search blogs", async () => {

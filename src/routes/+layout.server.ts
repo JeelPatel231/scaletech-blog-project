@@ -2,6 +2,6 @@ import type { LayoutServerLoad } from "./$types";
 
 export const load = (async ({ locals }) => {
   return {
-    user: locals.loggedInUser
+    loggedInUser: locals.loggedInUser
   }
 }) satisfies LayoutServerLoad;

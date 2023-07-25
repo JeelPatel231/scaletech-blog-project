@@ -28,7 +28,7 @@ export const actions = {
 
     if (validLogin === undefined) return fail(400)
 
-    const userFromDB = await User.findOneBy({ username: validLogin.username })
+    const userFromDB = await User.findOne({ where: { username: validLogin.username }, select: { password: true } })
 
     if (userFromDB === null)
       return fail(400, { username: "User doesn't exist." })

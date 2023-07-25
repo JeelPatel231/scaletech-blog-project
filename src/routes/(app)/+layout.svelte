@@ -5,7 +5,7 @@
 </script>
 
 <div class="app-layout">
-  <NavRail user={data.user} />
+  <NavRail user={data.loggedInUser} />
   <div class="p-8 area-content overflow-auto">
     <slot />
   </div>

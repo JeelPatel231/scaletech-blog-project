@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ConstructorBaseEntity } from "./TypeORMUtils";
 import { User } from "./User";
 
@@ -7,7 +7,7 @@ export class Blog extends ConstructorBaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @OneToOne(() => User)
+  @ManyToOne(() => User, (author) => author.blogs)
   @JoinColumn()
   author!: User;
 
