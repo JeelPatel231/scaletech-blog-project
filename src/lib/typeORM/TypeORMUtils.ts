@@ -3,11 +3,11 @@ import type { Primitive, PickByValue } from "utility-types";
 import { instanceToPlain } from "class-transformer";
 
 export class ConstructorBaseEntity extends BaseEntity {
-  setAttributes(values: PickByValue<this,
+  setAttributes(values: Partial<PickByValue<this,
     Primitive | Primitive[] |
     ConstructorBaseEntity | ConstructorBaseEntity[]> |
     Promise<any>
-  ) {
+  >) {
     Object.assign(this, values)
   }
 
