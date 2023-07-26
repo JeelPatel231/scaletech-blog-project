@@ -1,4 +1,5 @@
 # To-Do List
- - move db logic to api routes and call API routes for data fetching (ssr + csr) (MOVE TO ORM)
- - add JWT auth (DONE) // register login
- - create UI (WIP)
+- implement photo uploading in Post
+- deletion/updation of user blogs
+- profile page for user
+- docker-compose for postgres + node-app ( + nginx maybe )

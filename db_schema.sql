@@ -1,3 +1,7 @@
+--@ This is OLD SQLITE Schema for reference,
+-- Currently the app uses TypeORM
+-- models in `src/lib/typeORM`
+
 PRAGMA foreign_keys = ON;
 
 CREATE TABLE user ( 
