@@ -5,7 +5,6 @@ import { instanceToPlain } from "class-transformer";
 export const load = (async () => {
 
   const blogs = await Blog.find({ relations: { author: true } })
-  console.log(blogs)
   return {
     blogs: instanceToPlain(blogs)
   }

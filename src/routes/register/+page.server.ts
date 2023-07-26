@@ -25,7 +25,6 @@ export const actions = {
       const salt = await bcrypt.genSalt(10)
 
       const avatarFile = data.avatar as File
-      console.log(avatarFile)
       if (avatarFile.size !== 0) {
         if (avatarFile.name.endsWith(".png")) {
           const buffer = Buffer.from(await avatarFile.arrayBuffer());
