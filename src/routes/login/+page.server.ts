@@ -1,10 +1,10 @@
 import { type Actions, fail, redirect, type ServerLoad } from "@sveltejs/kit";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { jwtSecretKey } from "$lib/JWT";
 import { BaseUserSchema } from "$lib/zodValidations/User";
 import { isZodError } from "$lib/ZodError";
 import { User } from "$lib/typeORM/User";
+import { APP_CONFIG } from "$lib/AppConfig";
 
 export const load = (async ({ locals }) => {
   // Throw user to home page when already logged in 
@@ -14,7 +14,7 @@ export const load = (async ({ locals }) => {
 }) satisfies ServerLoad
 
 export const actions = {
-  default: async ({ cookies, request, locals }) => {
+  default: async ({ cookies, request }) => {
     const data = Object.fromEntries(await request.formData());
 
     let validLogin;
@@ -41,7 +41,7 @@ export const actions = {
       username: validLogin.username,
     }
 
-    cookies.set("jwt", jwt.sign(jwtData, jwtSecretKey))
+    cookies.set("jwt", jwt.sign(jwtData, APP_CONFIG.jwtToken))
 
     throw redirect(302, '/')
   }
