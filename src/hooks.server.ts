@@ -10,12 +10,16 @@ export const handle = (async ({ event, resolve }) => {
 
   const jwt_cookie = event.cookies.get("jwt")
   if (jwt_cookie) {
-    const decoded = jwt.decode(jwt_cookie, { complete: true })
-    if (!decoded) {
+    const decodedPayload = jwt.decode(jwt_cookie, { complete: true })?.payload
+
+    if (!decodedPayload || typeof decodedPayload === "string") {
       throw `provided token does not decode as JWT`
     }
 
-    const userData = await User.findOneBy({ username: decoded.payload.username })
+    const userData = await User.findOneBy({
+      username: decodedPayload.username
+    })
+
     event.locals.loggedInUser = userData?.getPOJO() as User ?? null
   } else {
     event.locals.loggedInUser = null
