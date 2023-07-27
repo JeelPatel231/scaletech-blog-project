@@ -6,9 +6,14 @@ export const load = (async ({ params }) => {
   if (!params.id)
     throw error(404)
 
-  const user = await User.findOne({ where: { username: Equal(params.id) }, relations: { blogs: true } })
-
-  console.log(user)
+  const user = await User.findOne({
+    where: {
+      username: Equal(params.id.toLowerCase())
+    },
+    relations: {
+      blogs: true
+    }
+  })
 
   if (user === null)
     throw error(404)
