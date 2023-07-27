@@ -19,14 +19,16 @@
     {@html data.htmlRender}
   </div>
   <span class="block h-10" />
-  <div class="headline-small">Tags</div>
-  <div class="flex flex-wrap">
-    {#each data.blog.tags as tag}
-      <M3Chip>
-        <a href={`/tagged/${tag}`}>
-          {tag}
-        </a>
-      </M3Chip>
-    {/each}
-  </div>
+  {#if data.blog.tags.length !== 0}
+    <div class="headline-small">Tags</div>
+    <div class="flex flex-wrap">
+      {#each data.blog.tags as tag}
+        <M3Chip>
+          <a href={`/tagged/${tag}`}>
+            {tag}
+          </a>
+        </M3Chip>
+      {/each}
+    </div>
+  {/if}
 </div>
