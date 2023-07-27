@@ -1,12 +1,17 @@
 import { z } from "zod";
 
+const USERNAME_REGEX = /^[a-z0-9]+$/
+
 export const BaseUserSchema = z.object({
   username: z.string().trim()
     .min(4).max(20)
+    .transform(x => x.toLowerCase())
+    .refine(val => USERNAME_REGEX.test(val), {
+      message: "Only alphanumeric strings allowed in username"
+    })
     .refine((val) => !val.includes(' '), {
       message: "No Whitespaces Allowed in Username",
-    })
-    .transform(x => x.toLowerCase()),
+    }),
   password: z.string().trim().min(8),
 })
 
