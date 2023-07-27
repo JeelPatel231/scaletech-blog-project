@@ -1,7 +1,7 @@
 import { afterAll, beforeEach, expect, test } from "vitest";
 
 import "reflect-metadata"
-import { ArrayContains, DataSource, Equal, Like } from "typeorm";
+import { ArrayContains, ConnectionIsNotSetError, DataSource, Equal, Like } from "typeorm";
 import { User } from "$lib/typeORM/User";
 import { BaseDataSourceConfig } from "$lib/typeORM/BaseConfig";
 import { Blog } from "$lib/typeORM/Blog";
@@ -22,14 +22,16 @@ beforeEach(async () => {
   await dbConn.initialize()
 });
 
-afterAll(() => {
+afterAll(async () => {
+  const entities = dbConn.entityMetadatas.map(x => `"${x.tableName}"`).join(', ')
+  await dbConn.createQueryRunner().manager.query(`TRUNCATE TABLE ${entities} CASCADE;`)
   dbConn.destroy()
 })
 
 const user1 = new User()
 user1.setAttributes({
   avatar: false,
-  username: "Jeel",
+  username: "jeel",
   first_name: "Jeel",
   last_name: "Patel",
   password: "DBTESTING"
@@ -68,8 +70,8 @@ test("check insertion of blog", async () => {
   await user1.save()
   await blog1.save()
 
-  const resp = await Blog.find({ where: { author: { username: Equal("Jeel") } } })
-  const resp2 = await User.findOne({ where: { username: Equal("Jeel") }, relations: { blogs: true } })
+  const resp = await Blog.find({ where: { author: { username: Equal("jeel") } } })
+  const resp2 = await User.findOne({ where: { username: Equal("jeel") }, relations: { blogs: true } })
   expect(resp).toStrictEqual(resp2?.blogs)
 })
 
