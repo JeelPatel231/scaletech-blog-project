@@ -22,7 +22,7 @@ export const actions = {
       dbBlogEntry.setAttributes({
         ...parsedData,
         author: locals.loggedInUser,
-        tags: []
+        tags: parsedData.tags.split(" ").filter(x => x.trim() !== '')
       })
       dbBlogEntry.save()
 

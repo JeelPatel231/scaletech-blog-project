@@ -11,6 +11,12 @@
 <form method="post" class="max-w-3xl">
   <M3Input type="text" label="Title" name="title" />
   <M3Input type="text" label="Description" name="description" />
+  <M3Input
+    type="text"
+    label="Tags"
+    name="tags"
+    note="A tag must be of only 1 word, multiple tags are seperated by spaces."
+  />
   <M3TextArea label="Content" name="content" expandable={true} />
   <Mat3Button type="submit">Post Blog</Mat3Button>
 </form>
