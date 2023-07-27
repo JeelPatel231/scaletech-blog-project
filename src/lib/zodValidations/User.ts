@@ -6,16 +6,16 @@ export const BaseUserSchema = z.object({
     .refine((val) => !val.includes(' '), {
       message: "No Whitespaces Allowed in Username",
     }),
-  password: z.string().min(8),
+  password: z.string().trim().min(8),
 })
 
 const UserSchema = BaseUserSchema.extend({
-  last_name: z.string().max(20),
-  first_name: z.string().max(20),
+  last_name: z.string().trim().max(20).min(1),
+  first_name: z.string().trim().max(20).min(1),
 })
 
 export const UserValidationSchema = UserSchema.extend({
-  passwordConfirm: z.string().min(8),
+  passwordConfirm: z.string().trim().min(8),
 }).refine((data) => data.password === data.passwordConfirm, {
   message: "Passwords don't match",
   path: ["passwordConfirm"],

@@ -2,6 +2,7 @@
   export let name: string;
   export let label: string;
   export let type: string; //"text" | "password";
+  export let note: string | undefined = undefined;
 </script>
 
 <div class="relative w-full">
@@ -17,6 +18,9 @@
     for={name}>{label}</label
   >
 </div>
+{#if note}
+  <div class="body-small secondary-text ml-2">* {note}</div>
+{/if}
 
 <style lang="scss">
   label {
