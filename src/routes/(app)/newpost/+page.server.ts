@@ -19,10 +19,15 @@ export const actions = {
 
     try {
       const parsedData = BlogValidationSchema.parse(data)
+      const filteredTags = parsedData.tags.split(" ")
+        .filter(x => x.trim() !== '')
+        .map(x => x.toLowerCase())
+      const tagArray = Array.from(new Set(filteredTags))
+
       dbBlogEntry.setAttributes({
         ...parsedData,
         author: locals.loggedInUser,
-        tags: parsedData.tags.split(" ").filter(x => x.trim() !== '')
+        tags: tagArray,
       })
       dbBlogEntry.save()
 
