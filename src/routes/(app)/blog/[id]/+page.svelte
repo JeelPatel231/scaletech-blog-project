@@ -35,6 +35,9 @@
   <div class="display-large mb-4">
     {data.blog.title}
   </div>
+  <div class="headline-small mb-4">
+    Posted on {data.blog.creation_date.toLocaleString()}
+  </div>
   <div class="headline-medium mb-8">
     - by {data.blog.author.username}
   </div>
