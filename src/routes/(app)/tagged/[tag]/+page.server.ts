@@ -7,7 +7,7 @@ export const load = (async ({ params }) => {
     throw error(404)
 
   const blogs = await Blog.find({
-    where: { tags: ArrayContains([params.tag]) },
+    where: { tags: ArrayContains([params.tag.toLowerCase()]) },
     relations: { author: true }
   })
 
