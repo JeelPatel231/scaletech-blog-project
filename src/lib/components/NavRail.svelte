@@ -4,7 +4,7 @@
   import type { User } from "$lib/typeORM/User";
   import NavRailAnchor from "./NavRailAnchor.svelte";
   import PrimaryNavButton from "./PrimaryNavButton.svelte";
-  export let user: User;
+  export let user: User | null;
 </script>
 
 <nav
