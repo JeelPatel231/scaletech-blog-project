@@ -53,7 +53,7 @@
     <div class="flex flex-wrap">
       {#each data.blog.tags as tag}
         <M3Chip>
-          <a href={`/tagged/${tag}`}>
+          <a href={`/tagged/${encodeURIComponent(tag)}`}>
             {tag}
           </a>
         </M3Chip>
