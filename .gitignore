@@ -21,3 +21,4 @@ yarn-error.log*
 
 # python-local dev env
 venv/
+.vercel
