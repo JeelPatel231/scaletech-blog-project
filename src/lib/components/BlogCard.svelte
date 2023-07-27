@@ -3,6 +3,7 @@
   export let title: string;
   export let description: string;
   export let author_username: string;
+  export let creation_date: Date;
 </script>
 
 <!-- https://stackoverflow.com/a/19834283 -->
@@ -17,8 +18,11 @@
     </div>
   </a>
   <a class="block w-fit" href={`/user/${author_username}`}>
-    <div class="label-large on-secondary-container-text font-bold">
+    <div class="label-large on-secondary-container-text font-bold mb-2">
       - by {author_username}
+    </div>
+    <div class="label-large on-secondary-container-text font-bold">
+      - on {creation_date.toLocaleString()}
     </div>
   </a>
   <a href={`/blog/${id}`}>

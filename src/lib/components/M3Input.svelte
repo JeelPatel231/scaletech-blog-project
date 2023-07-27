@@ -3,11 +3,12 @@
   export let label: string;
   export let type: string; //"text" | "password";
   export let note: string | undefined = undefined;
+  export let required: boolean = true;
 </script>
 
 <div class="relative w-full">
   <input
-    required
+    {required}
     spellcheck="false"
     class="h-10 rounded-md w-full mx-1 my-2 on-background-text background border-none"
     {type}
