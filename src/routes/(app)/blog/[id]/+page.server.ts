@@ -14,7 +14,7 @@ const remarkProcessor = remark()
   .use(remarkImages)
   .use(extendedTable)
 
-export const load = (async ({ params }) => {
+export const load = (async ({ params, url }) => {
   if (!params.id)
     throw error(404)
 
@@ -25,6 +25,9 @@ export const load = (async ({ params }) => {
   const processedContent = await remarkProcessor.process(blog.content);
 
   return {
+    request: {
+      origin: url.origin
+    },
     blog: blog.getPOJO(),
     htmlRender: processedContent.toString(),
   }
