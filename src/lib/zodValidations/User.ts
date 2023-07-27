@@ -5,7 +5,8 @@ export const BaseUserSchema = z.object({
     .min(4).max(20)
     .refine((val) => !val.includes(' '), {
       message: "No Whitespaces Allowed in Username",
-    }),
+    })
+    .transform(x => x.toLowerCase()),
   password: z.string().trim().min(8),
 })
 
