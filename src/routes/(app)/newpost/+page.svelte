@@ -9,18 +9,29 @@
 
 <div class="display-large">New Blog Post</div>
 <form method="post" class="max-w-3xl">
-  <M3Input type="text" label="Title" name="title" />
-  <span class="error-text label-small">{form?.title ?? ""}</span>
-  <M3Input type="text" label="Description" name="description" />
-  <span class="error-text label-small">{form?.description ?? ""}</span>
+  <M3Input label="Title" name="title" value={form?.data.title ?? ""} />
+  <span class="error-text label-small">{form?.errors.title ?? ""}</span>
   <M3Input
-    type="text"
+    label="Description"
+    name="description"
+    value={form?.data.description ?? ""}
+  />
+  <span class="error-text label-small">{form?.errors.description ?? ""}</span>
+  <M3Input
     label="Tags"
     name="tags"
     note="A tag must be of only 1 word, multiple tags are seperated by spaces."
+    value={form?.data.tags ?? ""}
   />
-  <span class="error-text label-small">{form?.tags ?? ""}</span>
-  <M3TextArea label="Content" name="content" expandable={true} />
-  <span class="block error-text label-small mb-4">{form?.content ?? ""}</span>
+  <span class="error-text label-small">{form?.errors.tags ?? ""}</span>
+  <M3TextArea
+    label="Content"
+    name="content"
+    expandable={true}
+    value={form?.data.content ?? ""}
+  />
+  <span class="block error-text label-small mb-4"
+    >{form?.errors.content ?? ""}</span
+  >
   <Mat3Button type="submit">Post Blog</Mat3Button>
 </form>

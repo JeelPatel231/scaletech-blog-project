@@ -5,6 +5,7 @@
   export let label: string;
   export let expandable: boolean = false;
   export let rows: number = 15;
+  export let value: string;
 
   let tx: HTMLTextAreaElement;
 
@@ -34,6 +35,7 @@
     bind:this={tx}
     placeholder={label}
     required
+    bind:value
     spellcheck="false"
     class="body-large rounded-md w-full mx-1 my-2 p-1
           outline-none on-background-text background border-2

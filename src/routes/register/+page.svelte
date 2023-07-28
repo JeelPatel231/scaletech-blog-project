@@ -2,6 +2,7 @@
   import STxyz from "$lib/assets/STxyz.svelte";
   import CustomInputFile from "$lib/components/CustomInputFile.svelte";
   import M3Input from "$lib/components/M3Input.svelte";
+  import M3InputPass from "$lib/components/M3InputPass.svelte";
   import Mat3Button from "$lib/components/Mat3Button.svelte";
   import type { ActionData } from "./$types";
   export let form: ActionData;
@@ -19,25 +20,49 @@
     >
       <span class="display-large mb-8 text-center">Register</span>
 
-      <M3Input label="First Name" name="first_name" type="text" />
-      <span class="error-text label-small ml-2">{form?.first_name ?? ""}</span>
-
-      <M3Input label="Last Name" name="last_name" type="text" />
-      <span class="error-text label-small ml-2">{form?.last_name ?? ""}</span>
-
-      <M3Input label="Username" name="username" type="text" />
-      <span class="error-text label-small ml-2">{form?.username ?? ""}</span>
-
-      <M3Input label="Password" name="password" type="password" />
-      <span class="error-text label-small ml-2">{form?.password ?? ""}</span>
-
       <M3Input
-        label="Confirm Password"
-        name="passwordConfirm"
-        type="password"
+        label="First Name"
+        name="first_name"
+        value={form?.returnData.first_name ?? ""}
       />
       <span class="error-text label-small ml-2">
-        {form?.passwordConfirm ?? ""}
+        {form?.errors.first_name ?? ""}
+      </span>
+
+      <M3Input
+        label="Last Name"
+        name="last_name"
+        value={form?.returnData.last_name ?? ""}
+      />
+      <span class="error-text label-small ml-2">
+        {form?.errors.last_name ?? ""}
+      </span>
+
+      <M3Input
+        label="Username"
+        name="username"
+        value={form?.returnData.username ?? ""}
+      />
+      <span class="error-text label-small ml-2">
+        {form?.errors.username ?? ""}
+      </span>
+
+      <M3InputPass
+        label="Password"
+        name="password"
+        value={form?.returnData.password ?? ""}
+      />
+      <span class="error-text label-small ml-2">
+        {form?.errors.password ?? ""}
+      </span>
+
+      <M3InputPass
+        label="Confirm Password"
+        name="passwordConfirm"
+        value={form?.returnData.passwordConfirm}
+      />
+      <span class="error-text label-small ml-2">
+        {form?.errors.passwordConfirm ?? ""}
       </span>
       <!---->
       <CustomInputFile accept="image/png" name="avatar" />
