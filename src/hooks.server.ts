@@ -1,7 +1,8 @@
+import { APP_CONFIG } from "$lib/AppConfig";
 import { AppDataSource } from "$lib/typeORM/Database";
 import { User } from "$lib/typeORM/User";
-import type { Handle } from "@sveltejs/kit";
-import jwt from "jsonwebtoken"
+import { redirect, type Handle } from "@sveltejs/kit";
+import * as jose from "jose"
 
 export const handle = (async ({ event, resolve }) => {
   if (!AppDataSource.isInitialized) {
@@ -10,20 +11,28 @@ export const handle = (async ({ event, resolve }) => {
 
   const jwt_cookie = event.cookies.get("jwt")
   if (jwt_cookie) {
-    const decodedPayload = jwt.decode(jwt_cookie, { complete: true })?.payload
+    try {
+      const { payload, protectedHeader } = await jose.jwtVerify(jwt_cookie, APP_CONFIG.jwtToken, {
+        // TODO: research if needs hardcoding.
+        issuer: event.url.origin,
+        audience: event.url.origin,
+      })
 
-    if (!decodedPayload || typeof decodedPayload === "string") {
-      throw `provided token does not decode as JWT`
+      const userData = await User.findOneBy({
+        username: payload.username as string
+      })
+
+      event.locals.loggedInUser = userData?.getPOJO() as User ?? null
+    } catch (e: any) {
+      event.cookies.delete("jwt")
+      // malformed JWT token, clear the cookie and throw user at login page
+      throw redirect(307, '/login')
     }
-
-    const userData = await User.findOneBy({
-      username: decodedPayload.username
-    })
-
-    event.locals.loggedInUser = userData?.getPOJO() as User ?? null
   } else {
+    // no cookie?, not logged in
     event.locals.loggedInUser = null
   }
+
 
   return await resolve(event);
 }) satisfies Handle 

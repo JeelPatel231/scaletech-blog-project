@@ -1,5 +1,5 @@
 import { type Actions, fail, redirect, type ServerLoad } from "@sveltejs/kit";
-import jwt from "jsonwebtoken";
+import * as jose from "jose"
 import bcrypt from "bcrypt";
 import { BaseUserSchema } from "$lib/zodValidations/User";
 import { User } from "$lib/typeORM/User";
@@ -13,7 +13,7 @@ export const load = (async ({ locals }) => {
 }) satisfies ServerLoad
 
 export const actions = {
-  default: async ({ cookies, request }) => {
+  default: async ({ cookies, request, url }) => {
     const data = Object.fromEntries(await request.formData());
     // strip out data that doesnt need to be returned, like password
     const { password, ...returnData } = data;
@@ -43,7 +43,15 @@ export const actions = {
       username: validLogin.data.username,
     }
 
-    cookies.set("jwt", jwt.sign(jwtData, APP_CONFIG.jwtToken))
+    const JWTcookie = await new jose.SignJWT(jwtData)
+      .setProtectedHeader({ alg: APP_CONFIG.jwtAlg })
+      .setIssuedAt()
+      .setIssuer(url.origin)
+      .setAudience(url.origin)
+      .setExpirationTime('2h')
+      .sign(APP_CONFIG.jwtToken)
+
+    cookies.set("jwt", JWTcookie)
 
     throw redirect(302, '/')
   }

@@ -5,7 +5,7 @@ import { type Actions, fail, redirect } from "@sveltejs/kit";
 export const actions = {
   default: async ({ request, locals }) => {
     if (locals.loggedInUser === null) {
-      throw redirect(302, '/login')
+      throw redirect(307, '/login')
     }
 
     const formData = await request.formData()

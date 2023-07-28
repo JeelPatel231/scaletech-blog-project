@@ -44,6 +44,6 @@ export const actions = {
     })
 
     await userObject.save()
-    throw redirect(302, '/login')
+    throw redirect(307, '/login')
   },
 } satisfies Actions;
