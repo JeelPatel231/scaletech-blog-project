@@ -11,51 +11,41 @@ const isError = (e: unknown): e is Error => {
 
 export const actions = {
   default: async ({ request }) => {
-    try {
-      const data = Object.fromEntries(await request.formData())
-      const parsedData = UserValidationSchema.parse(data)
+    const data = Object.fromEntries(await request.formData())
+    const parsedResult = await UserValidationSchema.safeParseAsync(data)
 
-      const userFromDB = await User.findOneBy({ username: parsedData.username })
-      if (userFromDB !== null) {
-        return fail(400, { username: "Username already taken" })
-      }
-
-      const userObject = new User()
-
-      const salt = await bcrypt.genSalt(10)
-
-      const avatarFile = data.avatar as File
-      if (avatarFile.size !== 0) {
-        if (avatarFile.name.endsWith(".png")) {
-          const buffer = Buffer.from(await avatarFile.arrayBuffer());
-          // TODO : compress images
-          // TODO : handle troll large uploads 
-          fs.writeFileSync(`static/avatar/${parsedData.username}.png`, buffer, "base64");
-          userObject.setAttributes({ avatar: true })
-        } else {
-          return fail(400, { avatar: "Invalid Image Format! PNGs only" })
-        }
-      }
-
-      userObject.setAttributes({
-        ...parsedData,
-        password: await bcrypt.hash(parsedData.password, salt),
-      })
-
-      await userObject.save()
-    } catch (e: any) {
-      console.log(e)
-      if (isZodError(e)) {
-        return fail(400, e.formErrors.fieldErrors)
-      }
-
-      if (isError(e)) {
-        return fail(400, { username: e.stack })
-      }
-
-      throw e
+    if (!parsedResult.success) {
+      return fail(400, parsedResult.error.formErrors.fieldErrors)
     }
 
+    const userFromDB = await User.findOneBy({ username: parsedResult.data.username })
+    if (userFromDB !== null) {
+      return fail(400, { username: "Username already taken" })
+    }
+
+    const userObject = new User()
+
+    const salt = await bcrypt.genSalt(10)
+
+    const avatarFile = data.avatar as File
+    if (avatarFile.size !== 0) {
+      if (avatarFile.name.endsWith(".png")) {
+        const buffer = Buffer.from(await avatarFile.arrayBuffer());
+        // TODO : compress images
+        // TODO : handle troll large uploads 
+        fs.writeFileSync(`static/avatar/${parsedResult.data.username}.png`, buffer, "base64");
+        userObject.setAttributes({ avatar: true })
+      } else {
+        return fail(400, { avatar: "Invalid Image Format! PNGs only" })
+      }
+    }
+
+    userObject.setAttributes({
+      ...parsedResult.data,
+      password: await bcrypt.hash(parsedResult.data.password, salt),
+    })
+
+    await userObject.save()
     throw redirect(302, '/login')
   },
 } satisfies Actions;

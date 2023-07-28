@@ -1,7 +1,7 @@
 import { afterAll, beforeEach, expect, test } from "vitest";
 
 import "reflect-metadata"
-import { ArrayContains, ConnectionIsNotSetError, DataSource, Equal, Like } from "typeorm";
+import { ArrayContains, DataSource, Equal, Like } from "typeorm";
 import { User } from "$lib/typeORM/User";
 import { BaseDataSourceConfig } from "$lib/typeORM/BaseConfig";
 import { Blog } from "$lib/typeORM/Blog";
