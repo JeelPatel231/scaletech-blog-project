@@ -15,10 +15,12 @@ export const load = (async ({ locals }) => {
 export const actions = {
   default: async ({ cookies, request }) => {
     const data = Object.fromEntries(await request.formData());
+    // strip out data that doesnt need to be returned, like password
+    const { password, ...returnData } = data;
 
     const validLogin = await BaseUserSchema.safeParseAsync(data);
     if (!validLogin.success) {
-      return fail(400, validLogin.error.formErrors.fieldErrors)
+      return fail(400, { returnData, errors: validLogin.error.formErrors.fieldErrors })
     }
 
     const userFromDB = await User.findOne({
@@ -31,10 +33,10 @@ export const actions = {
     })
 
     if (userFromDB === null)
-      return fail(400, { username: "User doesn't exist." })
+      return fail(400, { returnData, errors: { username: "User doesn't exist." } })
 
     if (!await bcrypt.compare(validLogin.data.password, userFromDB.password))
-      return fail(400, { password: "Incorrect password entered." })
+      return fail(400, { returnData, errors: { password: "Incorrect password entered." } })
 
     const jwtData = {
       time: new Date(),

@@ -1,6 +1,7 @@
 <script lang="ts">
   import STxyz from "$lib/assets/STxyz.svelte";
   import M3Input from "$lib/components/M3Input.svelte";
+  import M3InputPass from "$lib/components/M3InputPass.svelte";
   import Mat3Button from "$lib/components/Mat3Button.svelte";
   import type { ActionData } from "./$types";
   export let form: ActionData;
@@ -13,10 +14,22 @@
   <div class="flex-1">
     <form class="flex flex-col px-4 max-w-sm" method="post">
       <span class="display-large mb-8 text-center">Login</span>
-      <M3Input label="Username" name="username" type="text" />
-      <span class="error-text label-small ml-2">{form?.username ?? ""}</span>
-      <M3Input label="Password" name="password" type="password" />
-      <span class="error-text label-small ml-2">{form?.password ?? ""}</span>
+      <M3Input
+        label="Username"
+        name="username"
+        value={form?.returnData.username ?? ""}
+      />
+      <span class="error-text label-small ml-2">
+        {form?.errors.username ?? ""}
+      </span>
+      <M3InputPass
+        label="Password"
+        name="password"
+        value={form?.returnData.password ?? ""}
+      />
+      <span class="error-text label-small ml-2">
+        {form?.errors.password ?? ""}
+      </span>
       <span class="h-4" />
       <Mat3Button type="submit">Submit</Mat3Button>
       <span class="text-center mt-4"

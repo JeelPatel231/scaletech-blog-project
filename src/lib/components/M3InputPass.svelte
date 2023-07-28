@@ -11,7 +11,7 @@
     {required}
     spellcheck="false"
     class="h-10 rounded-md w-full mx-1 my-2 on-background-text background border-none"
-    type="text"
+    type="password"
     {name}
     bind:value
   />

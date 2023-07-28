@@ -32,15 +32,17 @@
   >
     {#if user}
       <div class="flex flex-col items-center mb-2">
-        {#if user.avatar}
-          <img
-            src={`/avatar/${user.username}.png`}
-            class="rounded-full w-full h-full object-cover aspect-square"
-            alt={user.username}
-          />
-        {:else}
-          <AccountCircle class="fill-[var(--md-sys-color-on-background)]" />
-        {/if}
+        <a href="/myprofile">
+          {#if user.avatar}
+            <img
+              src={`/avatar/${user.username}.png`}
+              class="rounded-full w-full h-full object-cover aspect-square"
+              alt={user.username}
+            />
+          {:else}
+            <AccountCircle class="fill-[var(--md-sys-color-on-background)]" />
+          {/if}
+        </a>
       </div>
       <!-- <div class="label-large mb-4"> -->
       <!--   {user.username} -->

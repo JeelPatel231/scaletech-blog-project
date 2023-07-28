@@ -13,7 +13,7 @@ export const actions = {
     const parsedData = await BlogValidationSchema.safeParseAsync(data)
 
     if (!parsedData.success) {
-      return fail(400, parsedData.error.formErrors.fieldErrors)
+      return fail(400, { data, errors: parsedData.error.formErrors.fieldErrors })
     }
 
     const dbBlogEntry = new Blog();
