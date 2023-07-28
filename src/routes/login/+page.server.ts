@@ -1,9 +1,9 @@
 import { type Actions, fail, redirect, type ServerLoad } from "@sveltejs/kit";
 import * as jose from "jose"
-import bcrypt from "bcrypt";
 import { BaseUserSchema } from "$lib/zodValidations/User";
 import { User } from "$lib/typeORM/User";
 import { APP_CONFIG } from "$lib/AppConfig";
+import { matchSHA256Hash } from "$lib/Password";
 
 export const load = (async ({ locals }) => {
   // Throw user to home page when already logged in 
@@ -35,7 +35,7 @@ export const actions = {
     if (userFromDB === null)
       return fail(400, { returnData, errors: { username: "User doesn't exist." } })
 
-    if (!await bcrypt.compare(validLogin.data.password, userFromDB.password))
+    if (!await matchSHA256Hash(validLogin.data.password, userFromDB.password))
       return fail(400, { returnData, errors: { password: "Incorrect password entered." } })
 
     const jwtData = {
