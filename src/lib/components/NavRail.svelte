@@ -32,7 +32,7 @@
   >
     {#if user}
       <div class="flex flex-col items-center mb-2">
-        <a href="/myprofile">
+        <a href="/myprofile" class="h-full">
           {#if user.avatar}
             <img
               src={`/avatar/${user.username}.png`}
@@ -44,9 +44,6 @@
           {/if}
         </a>
       </div>
-      <!-- <div class="label-large mb-4"> -->
-      <!--   {user.username} -->
-      <!-- </div> -->
       <NavRailAnchor
         reload={true}
         href="/logout"

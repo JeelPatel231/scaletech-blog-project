@@ -27,6 +27,6 @@ export class User extends ConstructorBaseEntity {
 
   @OneToMany(() => Blog, (blog) => blog.author)
   @JoinColumn()
-  blogs!: Promise<Blog[]>
+  blogs!: Blog[]
 }
 
