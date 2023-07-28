@@ -47,7 +47,12 @@
       <!-- <div class="label-large mb-4"> -->
       <!--   {user.username} -->
       <!-- </div> -->
-      <NavRailAnchor href="/logout" icon="logout" label="Logout" />
+      <NavRailAnchor
+        reload={true}
+        href="/logout"
+        icon="logout"
+        label="Logout"
+      />
     {:else}
       <NavRailAnchor href="/login" icon="login" label="Login" />
     {/if}
