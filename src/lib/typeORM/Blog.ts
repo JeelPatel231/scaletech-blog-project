@@ -5,7 +5,7 @@ import { User } from "./User";
 @Entity()
 export class Blog extends ConstructorBaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id?: string;
+  id!: string;
 
   @ManyToOne(() => User, (author) => author.blogs)
   @JoinColumn()

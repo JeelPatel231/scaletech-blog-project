@@ -6,7 +6,7 @@ export const load = (async () => {
 
   const blogs = await Blog.find({ relations: { author: true } })
   return {
-    blogs: instanceToPlain<Blog[]>(blogs)
+    blogs: instanceToPlain(blogs) as Blog[]
   }
 
 }) satisfies ServerLoad
