@@ -2,7 +2,6 @@ import { type Actions, fail, redirect, type ServerLoad } from "@sveltejs/kit";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { BaseUserSchema } from "$lib/zodValidations/User";
-import { isZodError } from "$lib/ZodError";
 import { User } from "$lib/typeORM/User";
 import { APP_CONFIG } from "$lib/AppConfig";
 
@@ -17,28 +16,29 @@ export const actions = {
   default: async ({ cookies, request }) => {
     const data = Object.fromEntries(await request.formData());
 
-    let validLogin;
-    try {
-      validLogin = BaseUserSchema.parse(data);
-    } catch (e: any) {
-      if (isZodError(e)) {
-        return fail(400, e.formErrors.fieldErrors)
-      }
+    const validLogin = await BaseUserSchema.safeParseAsync(data);
+    if (!validLogin.success) {
+      return fail(400, validLogin.error.formErrors.fieldErrors)
     }
 
-    if (validLogin === undefined) return fail(400)
-
-    const userFromDB = await User.findOne({ where: { username: validLogin.username }, select: { password: true } })
+    const userFromDB = await User.findOne({
+      where: {
+        username: validLogin.data.username
+      },
+      select: {
+        password: true
+      }
+    })
 
     if (userFromDB === null)
       return fail(400, { username: "User doesn't exist." })
 
-    if (!await bcrypt.compare(validLogin.password, userFromDB.password))
+    if (!await bcrypt.compare(validLogin.data.password, userFromDB.password))
       return fail(400, { password: "Incorrect password entered." })
 
     const jwtData = {
       time: new Date(),
-      username: validLogin.username,
+      username: validLogin.data.username,
     }
 
     cookies.set("jwt", jwt.sign(jwtData, APP_CONFIG.jwtToken))
