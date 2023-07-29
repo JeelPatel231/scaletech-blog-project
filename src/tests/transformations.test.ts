@@ -18,6 +18,18 @@ test("zod username transformation", async () => {
   expect(userobj.username.toLowerCase() === parsed.username).toBeTruthy()
 })
 
+test.fails("zod password validation", async () => {
+  const userobj = {
+    avatar: false,
+    username: "Jeel",
+    first_name: "Jeel",
+    last_name: "Patel",
+    password: "DBTESTING",
+    passwordConfirm: "DBTESTING2"
+  }
+  UserValidationSchema.parse(userobj)
+})
+
 test("blog input validation", () => {
   const blogInput = {
     title: "Nice Blog Title",

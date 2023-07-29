@@ -19,7 +19,7 @@ export const load = (async ({ params }) => {
     throw error(404)
 
   return {
-    user: instanceToPlain(user),
+    user: instanceToPlain(user) as User,
   }
 
 }) satisfies ServerLoad

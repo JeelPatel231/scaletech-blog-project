@@ -1,27 +1,14 @@
 <script lang="ts">
   import BlogCard from "$lib/components/BlogCard.svelte";
-  import type { PageData } from "./$types";
+  import M3InputPass from "$lib/components/M3InputPass.svelte";
+  import Mat3Button from "$lib/components/Mat3Button.svelte";
+  import ProfileHeader from "$lib/components/ProfileHeader.svelte";
+  import type { ActionData, PageData } from "./$types";
   export let data: PageData;
+  export let form: ActionData;
 </script>
 
-<div class="flex flex-col sm:flex-row gap-8 items-center">
-  {#if data.userData.avatar}
-    <img
-      class="aspect-square w-full sm:w-40 rounded-full object-cover"
-      src={`/avatar/${data.userData.username}.png`}
-      alt={data.userData.username}
-    />
-  {/if}
-  <span>
-    <div class="display-large mb-2 !underline underline-offset-8">
-      {data.userData.first_name}
-      {data.userData.last_name}
-    </div>
-    <div class="display-medium mb-8">
-      - @{data.userData.username}
-    </div>
-  </span>
-</div>
+<ProfileHeader {...data.userData} />
 
 <span class="block h-8" />
 <div class="display-small mb-4 !underline underline-offset-8">
@@ -30,6 +17,29 @@
 <div class="body-large">
   Creation Date : {data.userData.account_created}
 </div>
+
+<span class="block h-10" />
+<!-- change password -->
+<div class="display-small mb-4 !underline underline-offset-8">
+  Change Password
+</div>
+<form method="POST" class="max-w-3xl">
+  <M3InputPass label="Password" name="password" value="" />
+  <span class="block error-text label-small ml-2">
+    {form?.errors?.password ?? ""}
+  </span>
+
+  <M3InputPass label="Confirm Password" name="passwordConfirm" value="" />
+  <span class="block error-text label-small ml-2">
+    {form?.errors?.passwordConfirm ?? ""}
+  </span>
+  {#if form?.success}
+    <span class="block body-large ml-2"> Password Changed Successfully! </span>
+  {/if}
+  <span class="block h-4" />
+  <Mat3Button type="submit">Change Password</Mat3Button>
+</form>
+
 <span class="block h-8" />
 <div class="display-small mb-4 !underline underline-offset-8">
   Blogs written by you
