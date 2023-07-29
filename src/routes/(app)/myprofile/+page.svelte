@@ -1,27 +1,11 @@
 <script lang="ts">
   import BlogCard from "$lib/components/BlogCard.svelte";
+  import ProfileHeader from "$lib/components/ProfileHeader.svelte";
   import type { PageData } from "./$types";
   export let data: PageData;
 </script>
 
-<div class="flex flex-col sm:flex-row gap-8 items-center">
-  {#if data.userData.avatar}
-    <img
-      class="aspect-square w-full sm:w-40 rounded-full object-cover"
-      src={`/avatar/${data.userData.username}.png`}
-      alt={data.userData.username}
-    />
-  {/if}
-  <span>
-    <div class="display-large mb-2 !underline underline-offset-8">
-      {data.userData.first_name}
-      {data.userData.last_name}
-    </div>
-    <div class="display-medium mb-8">
-      - @{data.userData.username}
-    </div>
-  </span>
-</div>
+<ProfileHeader {...data.userData} />
 
 <span class="block h-8" />
 <div class="display-small mb-4 !underline underline-offset-8">
