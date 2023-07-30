@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let avatar: boolean;
+  export let avatar: string;
   export let username: string;
   export let first_name: string;
   export let last_name: string;
@@ -9,7 +9,7 @@
   {#if avatar}
     <img
       class="aspect-square w-full max-w-xs sm:w-40 rounded-full object-cover"
-      src={`/avatar/${username}.png`}
+      src={`data:image/png;base64, ${avatar}`}
       alt={username}
     />
   {/if}

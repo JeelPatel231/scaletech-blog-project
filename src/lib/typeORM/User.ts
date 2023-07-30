@@ -11,10 +11,9 @@ export class User extends ConstructorBaseEntity {
   @Column('text')
   password!: string;
 
-  // @Column('text', { nullable: true })
-  // avatar: string | null = null;
-  @Column('boolean')
-  avatar: boolean = false
+  // TODO: search more about class transformers
+  @Column('text', { nullable: true })
+  avatar: string | null = null
 
   @Column('text')
   last_name!: string;

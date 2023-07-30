@@ -33,9 +33,9 @@
     {#if user}
       <div class="flex flex-col items-center mb-2">
         <a href="/myprofile" class="h-full">
-          {#if user.avatar}
+          {#if user.avatar !== null}
             <img
-              src={`/avatar/${user.username}.png`}
+              src={`data:image/png;base64, ${user.avatar}`}
               class="rounded-full w-full h-full object-cover aspect-square"
               alt={user.username}
             />
