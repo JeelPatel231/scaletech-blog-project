@@ -2,7 +2,6 @@ import { User } from "$lib/typeORM/User";
 import { UserValidationSchema } from "$lib/zodValidations/User";
 import { type Actions, fail, redirect } from "@sveltejs/kit";
 import bcrypt from "bcrypt";
-import fs from "fs"
 
 export const actions = {
   default: async ({ request }) => {
@@ -31,8 +30,7 @@ export const actions = {
         const buffer = Buffer.from(await avatarFile.arrayBuffer());
         // TODO : compress images
         // TODO : handle troll large uploads 
-        fs.writeFileSync(`static/avatar/${parsedResult.data.username}.png`, buffer, "base64");
-        userObject.setAttributes({ avatar: true })
+        userObject.setAttributes({ avatar: buffer.toString('base64') })
       } else {
         return fail(400, { returnData, errors: { avatar: "Invalid Image Format! PNGs only" } })
       }
