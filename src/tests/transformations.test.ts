@@ -50,6 +50,7 @@ test("zod tags transformation", async () => {
     "67895valid", // numbers + alphabets
     "valid2331", // alphabets + numbers
     "6q-7ew8qw95-valid", // mixed with -
+    "AI-ML", // capital letters should work
   ];
 
   const invalidTags = [
