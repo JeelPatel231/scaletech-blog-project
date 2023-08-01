@@ -18,7 +18,7 @@ export const load = (async ({ params, url }) => {
   if (!params.id)
     throw error(404)
 
-  const blog = await Blog.findOne({ where: { id: params.id }, relations: { author: true } })
+  const blog = await Blog.getFullBlog(params.id)
 
   if (blog === null) throw error(404)
 

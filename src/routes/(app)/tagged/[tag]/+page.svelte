@@ -5,6 +5,10 @@
   export let data: PageServerData;
 </script>
 
+<svelte:head>
+  <title>Blog | #{data.tag}</title>
+</svelte:head>
+
 <div class="display-large">Tagged with #{data.tag}</div>
 <span class="h-8 block" />
 {#if data.blogs.length === 0}

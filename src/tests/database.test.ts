@@ -97,3 +97,19 @@ test("fetch blogs from tags", async () => {
   const resp = await Blog.find({ where: { tags: ArrayContains(["tag1"]) }, relations: { author: true } })
   expect(resp.pop()).toStrictEqual(blog1)
 })
+
+
+test("new DAO like functions", async () => {
+  await user1.save()
+  await blog1.save()
+  console.log(await Blog.getBlogEntries())
+  console.log(await Blog.getBlogEntries({ author: Equal(user1.username) }))
+  console.log(await Blog.getFullBlog(blog1.id))
+})
+
+test("new DAO like functions", async () => {
+  await user1.save()
+  await blog1.save()
+  console.log(await User.getUserDetails(user1.username))
+  console.log(await User.getUserPassword(user1.username))
+})

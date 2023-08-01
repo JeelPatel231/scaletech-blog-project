@@ -8,6 +8,10 @@
   export let form: ActionData;
 </script>
 
+<svelte:head>
+  <title>Blog | Manage Your Account</title>
+</svelte:head>
+
 <ProfileHeader {...data.userData} />
 
 <span class="block h-8" />

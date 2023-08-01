@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type FindOptionsWhere } from "typeorm";
 import { ConstructorBaseEntity } from "./TypeORMUtils";
 import { User } from "./User";
 
@@ -25,5 +25,32 @@ export class Blog extends ConstructorBaseEntity {
 
   @Column('timestamptz')
   creation_date: Date = new Date();
+
+  static async getBlogEntries(where?: FindOptionsWhere<Blog>): Promise<Blog[]> {
+    return await this.find({
+      where,
+      relations: {
+        author: true
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        tags: true,
+      },
+      order: {
+        creation_date: 'DESC'
+      }
+    })
+  }
+
+  static async getFullBlog(id: string): Promise<Blog | null> {
+    return await this.findOne({
+      where: { id: id },
+      relations: { author: true },
+      select: { author: { username: true } }
+    })
+  }
+
 }
 

@@ -5,6 +5,7 @@ import { error } from "console";
 import bcrypt from "bcrypt";
 import type { Actions } from "./$types";
 import { PasswordValidationSchema } from "$lib/zodValidations/User";
+import { Blog } from "$lib/typeORM/Blog";
 
 
 // TODO : handle change account details 
@@ -14,14 +15,7 @@ export const load = (async ({ locals }) => {
     throw redirect(302, "/login")
   }
 
-  const user = await User.findOne({
-    where: {
-      username: locals.loggedInUser.username
-    },
-    relations: {
-      blogs: true
-    }
-  })
+  const user = await User.getUserDetails(locals.loggedInUser.username)
 
   if (user === null)
     throw error(500, "Logged in user doesnt exist in DB, HOW???")
@@ -35,7 +29,6 @@ export const load = (async ({ locals }) => {
 export const actions = {
   default: async ({ request, locals }) => {
     const data = Object.fromEntries(await request.formData())
-    // strip out data that doesnt need to be returned, like password and avatar
 
     const parsedResult = await PasswordValidationSchema.safeParseAsync(data)
 
@@ -43,6 +36,7 @@ export const actions = {
       return fail(400, { success: false, errors: parsedResult.error.formErrors.fieldErrors })
     }
 
+    // can use User.save({ ... }) for saving entities
     const userFromDB = await User.findOneBy({ username: locals.loggedInUser!.username })
     if (userFromDB === null) {
       // todo : delete cookie and ask to relogin 

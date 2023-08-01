@@ -1,3 +1,4 @@
+import { APP_CONFIG } from "$lib/AppConfig";
 import { AppDataSource } from "$lib/typeORM/Database";
 import { User } from "$lib/typeORM/User";
 import type { Handle } from "@sveltejs/kit";
@@ -16,9 +17,7 @@ export const handle = (async ({ event, resolve }) => {
       throw `provided token does not decode as JWT`
     }
 
-    const userData = await User.findOneBy({
-      username: decodedPayload.username
-    })
+    const userData = await User.getUserDetails(decodedPayload.username)
 
     event.locals.loggedInUser = userData?.getPOJO() as User ?? null
   } else {

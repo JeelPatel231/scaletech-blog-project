@@ -8,11 +8,10 @@ services:
     depends_on:
       - postgres
     environment:
-      VITE_JWT_SECRET: "MyVerySecretJwtKeyThatIWantNoOneToKnowThatExists"
-      VITE_POSTGRES_URL: "postgresql://postgres:password@postgres"
-      ORIGIN: "http://localhost:3000"
+      - ORIGIN=http://localhost:3000
 
   postgres:
     image: "docker.io/postgres:alpine"
+    hostname: "postgres"
     environment:
       POSTGRES_PASSWORD: "password"
