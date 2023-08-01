@@ -6,7 +6,6 @@ import { BlogValidationSchema } from "$lib/zodValidations/Blog";
 
 test("zod username transformation", async () => {
   const userobj = {
-    avatar: false,
     username: "Jeel",
     first_name: "Jeel",
     last_name: "Patel",
@@ -20,7 +19,6 @@ test("zod username transformation", async () => {
 
 test.fails("zod password validation", async () => {
   const userobj = {
-    avatar: false,
     username: "Jeel",
     first_name: "Jeel",
     last_name: "Patel",

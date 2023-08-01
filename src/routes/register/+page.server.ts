@@ -7,7 +7,7 @@ export const actions = {
   default: async ({ request }) => {
     const data = Object.fromEntries(await request.formData())
     // strip out data that doesnt need to be returned, like password and avatar
-    const { password, passwordConfirm, avatar, ...returnData } = data;
+    const { password, passwordConfirm, ...returnData } = data;
 
     const parsedResult = await UserValidationSchema.safeParseAsync(data)
 
@@ -24,17 +24,17 @@ export const actions = {
 
     const salt = await bcrypt.genSalt(10)
 
-    const avatarFile = data.avatar as File
-    if (avatarFile.size !== 0) {
-      if (avatarFile.name.endsWith(".png")) {
-        const buffer = Buffer.from(await avatarFile.arrayBuffer());
-        // TODO : compress images
-        // TODO : handle troll large uploads 
-        userObject.setAttributes({ avatar: buffer.toString('base64') })
-      } else {
-        return fail(400, { returnData, errors: { avatar: "Invalid Image Format! PNGs only" } })
-      }
-    }
+    // const avatarFile = data.avatar as File
+    // if (avatarFile.size !== 0) {
+    //   if (avatarFile.name.endsWith(".png")) {
+    //     const buffer = Buffer.from(await avatarFile.arrayBuffer());
+    //     // TODO : compress images
+    //     // TODO : handle troll large uploads 
+    //     userObject.setAttributes({ avatar: buffer.toString('base64') })
+    //   } else {
+    //     return fail(400, { returnData, errors: { avatar: "Invalid Image Format! PNGs only" } })
+    //   }
+    // }
 
     userObject.setAttributes({
       ...parsedResult.data,
