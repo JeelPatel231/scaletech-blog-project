@@ -27,7 +27,24 @@ export const load = (async ({ locals }) => {
 }) satisfies ServerLoad
 
 export const actions = {
-  default: async ({ request, locals }) => {
+  deleteblog: async ({ request, locals }) => {
+    const blogId = (await request.formData()).get('blog_id')
+    if (blogId === null) {
+      return { error: { blog_id: "Invalid Blog ID Provided" } }
+    }
+    const blogEntry = await Blog.getFullBlog(blogId.toString())
+    if (blogEntry === null) {
+      return { error: { blog_id: "Blog not found in Database" } }
+    }
+
+    if (locals.loggedInUser?.username !== blogEntry.author.username) {
+      return { error: { blog_id: "Unauthorised to Delete Blog" } }
+    }
+
+    blogEntry.remove()
+  },
+
+  changepassword: async ({ request, locals }) => {
     const data = Object.fromEntries(await request.formData())
 
     const parsedResult = await PasswordValidationSchema.safeParseAsync(data)

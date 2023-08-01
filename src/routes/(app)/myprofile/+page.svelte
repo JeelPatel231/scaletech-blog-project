@@ -27,7 +27,7 @@
 <div class="display-small mb-4 !underline underline-offset-8">
   Change Password
 </div>
-<form method="POST" class="max-w-3xl">
+<form method="POST" action="?/changepassword" class="max-w-3xl">
   <M3InputPass label="Password" name="password" value="" />
   <span class="block error-text label-small ml-2">
     {form?.errors?.password ?? ""}
@@ -52,7 +52,12 @@
   <div class="body-large">No Blogs Posted Yet!</div>
 {/if}
 <div class="columns-1 gap-8 md:columns-2 lg:columns-3 max-w-7xl">
+  <!-- Deletable should be true in this page but still precaution -->
   {#each data.userData.blogs as blog}
-    <BlogCard author_username={data.userData.username} {...blog} />
+    <BlogCard
+      author_username={data.userData.username}
+      deletable={data.userData.username === data.loggedInUser?.username}
+      {...blog}
+    />
   {/each}
 </div>
