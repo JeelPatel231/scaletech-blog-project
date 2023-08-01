@@ -21,6 +21,11 @@
 <div class="body-large">
   Creation Date : {data.userData.account_created}
 </div>
+<!-- {#if form?.errors} -->
+<!--   <div class="error-text"> -->
+<!--     {JSON.stringify(form)} -->
+<!--   </div> -->
+<!-- {/if} -->
 
 <span class="block h-10" />
 <!-- change password -->
@@ -56,7 +61,8 @@
   {#each data.userData.blogs as blog}
     <BlogCard
       author_username={data.userData.username}
-      deletable={data.userData.username === data.loggedInUser?.username}
+      owner={data.userData.username === data.loggedInUser?.username}
+      form_next="/myprofile"
       {...blog}
     />
   {/each}

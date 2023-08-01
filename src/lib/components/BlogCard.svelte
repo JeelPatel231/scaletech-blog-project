@@ -1,15 +1,19 @@
 <script lang="ts">
+  import FormPost from "./FormPost.svelte";
+  import Mat3Anchor from "./Mat3Anchor.svelte";
+
   export let id: string;
   export let title: string;
   export let description: string;
   export let author_username: string;
   export let creation_date: Date;
-  export let deletable: boolean;
+  export let owner: boolean;
+  export let form_next: string | undefined;
 </script>
 
 <!-- https://stackoverflow.com/a/19834283 -->
 <div
-  class="inline-block group w-full mb-6 secondary-container hover:bg-[var(--md-sys-color-tertiary-container)] transition-all rounded-xl p-4 max-w-lg"
+  class="inline-block relative group w-full mb-6 secondary-container hover:bg-[var(--md-sys-color-tertiary-container)] transition-all rounded-xl p-4 max-w-lg"
 >
   <div class="flex">
     <a href={`/blog/${id}`}>
@@ -19,21 +23,21 @@
         {title}
       </div>
     </a>
-    {#if deletable}
-      <form
-        action="?/deleteblog"
-        class="invisible group-hover:visible ml-auto flex items-center"
-        method="post"
+    {#if owner}
+      <div
+        class="flex gap-1 invisible right-1 top-1 group-hover:visible absolute ml-auto items-center"
       >
-        <input type="hidden" name="blog_id" value={id} />
-        <button
-          type="submit"
-          class="bg-[var(--md-sys-color-surface-tint)] w-full p-1
-            rounded-full material-symbols-outlined"
+        <Mat3Anchor href={`/editpost/${id}`}>
+          <span class="material-symbols-outlined"> edit </span>
+        </Mat3Anchor>
+        <FormPost
+          action={`/api/deleteblog/${id}${
+            form_next ? `?next=${form_next}` : ""
+          }`}
         >
-          delete
-        </button>
-      </form>
+          <span class="material-symbols-outlined"> delete </span>
+        </FormPost>
+      </div>
     {/if}
   </div>
   <a class="block w-fit" href={`/user/${author_username}`}>

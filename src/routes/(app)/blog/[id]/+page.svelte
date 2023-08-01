@@ -1,5 +1,7 @@
 <script lang="ts">
+  import FormPost from "$lib/components/FormPost.svelte";
   import M3Chip from "$lib/components/M3Chip.svelte";
+  import Mat3Anchor from "$lib/components/Mat3Anchor.svelte";
   import type { PageServerData } from "./$types";
 
   export let data: PageServerData;
@@ -31,9 +33,23 @@
   <meta property="twitter:image" content={metaImg} />
 </svelte:head>
 
-<div class="max-w-5xl">
-  <div class="display-large mb-4">
-    {data.blog.title}
+<div class="max-w-5xl relative">
+  {#if data.loggedInUser?.username === data.blog.author.username}
+    <div class="flex gap-4 w-full justify-end sm:absolute top-0 right-0">
+      <Mat3Anchor class="ml-4" href={`/editpost/${data.blog.id}`}>
+        <span class="material-symbols-outlined mr-1">edit</span>
+        Edit
+      </Mat3Anchor>
+      <FormPost action={`/api/deleteblog/${data.blog.id}?next=/`}>
+        <span class="material-symbols-outlined"> delete </span>
+        Delete
+      </FormPost>
+    </div>
+  {/if}
+  <div class="flex">
+    <div class="display-large mb-4">
+      {data.blog.title}
+    </div>
   </div>
   <div class="headline-small mb-4">
     Posted on {data.blog.creation_date.toLocaleString()}

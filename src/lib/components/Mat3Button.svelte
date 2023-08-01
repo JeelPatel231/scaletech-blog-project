@@ -6,7 +6,7 @@
 
 <button
   {type}
-  class={`${materialColor} px-4 label-large on-${materialColor}-text h-10 rounded-full`}
+  class={`${materialColor} flex items-center justify-center cursor-pointer px-4 label-large on-${materialColor}-text h-10 rounded-full`}
   on:click={onClick}
 >
   <slot />
