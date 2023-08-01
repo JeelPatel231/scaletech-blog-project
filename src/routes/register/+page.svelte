@@ -7,6 +7,10 @@
   export let form: ActionData;
 </script>
 
+<svelte:head>
+  <title>Blog | Register a new Account</title>
+</svelte:head>
+
 <div class="flex flex-col sm:flex-row h-screen items-center">
   <div class="flex-1 pt-20 text-center">
     <STxyz class="h-80 fill-[var(--md-sys-color-on-background)]" />

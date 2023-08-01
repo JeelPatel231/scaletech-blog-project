@@ -7,6 +7,10 @@
   export let form: ActionData;
 </script>
 
+<svelte:head>
+  <title>Blog | New Blog Post</title>
+</svelte:head>
+
 <div class="display-large">New Blog Post</div>
 <form method="post" class="max-w-3xl">
   <M3Input label="Title" name="title" value={form?.data.title ?? ""} />

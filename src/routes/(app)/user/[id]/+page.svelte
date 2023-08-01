@@ -5,6 +5,10 @@
   export let data: PageServerData;
 </script>
 
+<svelte:head>
+  <title>Blog | @{data.user.username}</title>
+</svelte:head>
+
 <ProfileHeader {...data.user} />
 <span class="block mb-4" />
 {#if data.user.blogs.length !== 0}

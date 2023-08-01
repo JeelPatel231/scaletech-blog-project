@@ -12,7 +12,7 @@
 
 <svelte:head>
   <!-- Primary Meta Tags -->
-  <title>{data.blog.title}</title>
+  <title>Blog | {data.blog.title} - by {data.blog.author.username}</title>
   <meta name="title" content={metaTitle} />
   <meta name="description" content={metaDesc} />
 
