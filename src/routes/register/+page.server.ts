@@ -15,8 +15,9 @@ export const actions = {
       return fail(400, { returnData, errors: parsedResult.error.formErrors.fieldErrors })
     }
 
-    const userFromDB = await User.findOneBy({ username: parsedResult.data.username })
-    if (userFromDB !== null) {
+    // check availability of username
+    const userCount = await User.countBy({ username: parsedResult.data.username })
+    if (userCount !== 0) {
       return fail(400, { returnData, errors: { username: "Username already taken" } })
     }
 

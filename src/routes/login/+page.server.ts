@@ -23,19 +23,12 @@ export const actions = {
       return fail(400, { returnData, errors: validLogin.error.formErrors.fieldErrors })
     }
 
-    const userFromDB = await User.findOne({
-      where: {
-        username: validLogin.data.username
-      },
-      select: {
-        password: true
-      }
-    })
+    const passwordHashed = await User.getUserPassword(validLogin.data.username)
 
-    if (userFromDB === null)
+    if (passwordHashed === null)
       return fail(400, { returnData, errors: { username: "User doesn't exist." } })
 
-    if (!await bcrypt.compare(validLogin.data.password, userFromDB.password))
+    if (!await bcrypt.compare(validLogin.data.password, passwordHashed))
       return fail(400, { returnData, errors: { password: "Incorrect password entered." } })
 
     const jwtData = {

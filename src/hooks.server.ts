@@ -16,9 +16,7 @@ export const handle = (async ({ event, resolve }) => {
       throw `provided token does not decode as JWT`
     }
 
-    const userData = await User.findOneBy({
-      username: decodedPayload.username
-    })
+    const userData = await User.getUserDetails(decodedPayload.username)
 
     event.locals.loggedInUser = userData?.getPOJO() as User ?? null
   } else {

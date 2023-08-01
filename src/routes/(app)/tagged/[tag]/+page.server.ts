@@ -6,14 +6,13 @@ export const load = (async ({ params }) => {
   if (!params.tag)
     throw error(404)
 
-  const blogs = await Blog.find({
-    where: { tags: ArrayContains([params.tag.toLowerCase()]) },
-    relations: { author: true }
+  const blogs = await Blog.getBlogEntries({
+    tags: ArrayContains([params.tag.toLowerCase()]),
   })
 
   return {
     tag: params.tag,
-    blogs: instanceToPlain<Record<string, any>[]>(blogs)
+    blogs: instanceToPlain(blogs) as Blog[]
   }
 
 }) satisfies ServerLoad
