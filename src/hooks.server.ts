@@ -1,3 +1,4 @@
+import { APP_CONFIG } from "$lib/AppConfig";
 import { AppDataSource } from "$lib/typeORM/Database";
 import { User } from "$lib/typeORM/User";
 import type { Handle } from "@sveltejs/kit";
