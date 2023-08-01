@@ -30,7 +30,6 @@ afterAll(async () => {
 
 const user1 = new User()
 user1.setAttributes({
-  avatar: null,
   username: "jeel",
   first_name: "Jeel",
   last_name: "Patel",

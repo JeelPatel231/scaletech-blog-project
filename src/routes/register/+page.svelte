@@ -1,6 +1,5 @@
 <script lang="ts">
   import STxyz from "$lib/assets/STxyz.svelte";
-  import CustomInputFile from "$lib/components/CustomInputFile.svelte";
   import M3Input from "$lib/components/M3Input.svelte";
   import M3InputPass from "$lib/components/M3InputPass.svelte";
   import Mat3Button from "$lib/components/Mat3Button.svelte";
@@ -65,8 +64,8 @@
         {form?.errors.passwordConfirm ?? ""}
       </span>
       <!---->
-      <CustomInputFile accept="image/png" name="avatar" />
-      <span class="error-text label-small ml-2">{form?.avatar ?? ""}</span>
+      <!-- <CustomInputFile accept="image/png" name="avatar" /> -->
+      <!-- <span class="error-text label-small ml-2">{form?.avatar ?? ""}</span> -->
       <!---->
       <span class="h-4" />
       <Mat3Button type="submit">Submit</Mat3Button>
